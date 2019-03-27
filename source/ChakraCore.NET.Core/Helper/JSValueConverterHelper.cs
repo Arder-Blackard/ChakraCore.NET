@@ -97,5 +97,21 @@ namespace ChakraCore.NET
             };
             service.RegisterConverter<IEnumerable<T>>(tojs, fromjs, false);
         }
+
+        private static JavaScriptValue CreateError(IServiceNode node, Exception ex )
+        {
+            //  Create message value.
+            var errorMessage = JavaScriptValue.FromString(ex.Message);
+            //  Create error object.
+            var error = JavaScriptValue.CreateError(errorMessage);
+            //  Create JavaScriptValue storing the .NET Exception
+            var exceptionWrapper = JavaScriptValue.CreateExternalObject(IntPtr.Zero, null);
+            var handle = node.GetService<IGCSyncService>().SyncWithJsValue(ex, exceptionWrapper);
+            exceptionWrapper.ExternalData = GCHandle.ToIntPtr(handle);//save the exception reference to wrapper's external data
+            //  Store exception in an error object.
+            error.SetProperty(JavaScriptPropertyId.FromString("exception"), exceptionWrapper, true);
+
+            return error;
+        }
     }
 }

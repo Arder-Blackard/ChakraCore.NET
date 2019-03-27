@@ -1,4 +1,5 @@
 ﻿
+using System.Runtime.InteropServices;
 
 using System;
 using System.Collections.Generic;
@@ -14,16 +15,24 @@ public static partial class JSValueConverterHelper
             var jsValueService = node.GetService<IJSValueService>();
             JavaScriptNativeFunction f = (callee, isConstructCall, arguments, argumentCount, callbackData) =>
             {
-                if (argumentCount != 1)
+                try 
                 {
-                    throw new InvalidOperationException("call from javascript did not pass enough parameters");
-                }
-                
-                
+                    if (argumentCount != 1)
+                    {
+                        throw new InvalidOperationException("call from javascript did not pass enough parameters");
+                    }
+                    
+                    
 
-                a();
-                
-                return jsValueService.JSValue_Undefined;
+                    a();
+                    
+                    return jsValueService.JSValue_Undefined;
+                }
+                catch (Exception ex) 
+                {
+                    JavaScriptContext.SetException(CreateError(node, ex));
+                    return JavaScriptValue.Invalid;
+                }
             };
 
             return jsValueService.CreateFunction(f, IntPtr.Zero);
@@ -60,16 +69,24 @@ public static partial class JSValueConverterHelper
             var jsValueService = node.GetService<IJSValueService>();
             JavaScriptNativeFunction f = (callee, isConstructCall, arguments, argumentCount, callbackData) =>
             {
-                if (argumentCount != 2)
+                try 
                 {
-                    throw new InvalidOperationException("call from javascript did not pass enough parameters");
-                }
-                T1 para1 = converter.FromJSValue<T1>(arguments[1]);
-                arguments[1].AddRef();
+                    if (argumentCount != 2)
+                    {
+                        throw new InvalidOperationException("call from javascript did not pass enough parameters");
+                    }
+                    T1 para1 = converter.FromJSValue<T1>(arguments[1]);
+                    arguments[1].AddRef();
 
-                a(para1);
-                arguments[1].Release();
-                return jsValueService.JSValue_Undefined;
+                    a(para1);
+                    arguments[1].Release();
+                    return jsValueService.JSValue_Undefined;
+                }
+                catch (Exception ex) 
+                {
+                    JavaScriptContext.SetException(CreateError(node, ex));
+                    return JavaScriptValue.Invalid;
+                }
             };
 
             return jsValueService.CreateFunction(f, IntPtr.Zero);
@@ -106,19 +123,27 @@ public static partial class JSValueConverterHelper
             var jsValueService = node.GetService<IJSValueService>();
             JavaScriptNativeFunction f = (callee, isConstructCall, arguments, argumentCount, callbackData) =>
             {
-                if (argumentCount != 3)
+                try 
                 {
-                    throw new InvalidOperationException("call from javascript did not pass enough parameters");
-                }
-                T1 para1 = converter.FromJSValue<T1>(arguments[1]);
+                    if (argumentCount != 3)
+                    {
+                        throw new InvalidOperationException("call from javascript did not pass enough parameters");
+                    }
+                    T1 para1 = converter.FromJSValue<T1>(arguments[1]);
 T2 para2 = converter.FromJSValue<T2>(arguments[2]);
-                arguments[1].AddRef();
+                    arguments[1].AddRef();
 arguments[2].AddRef();
 
-                a(para1,para2);
-                arguments[1].Release();
+                    a(para1,para2);
+                    arguments[1].Release();
 arguments[2].Release();
-                return jsValueService.JSValue_Undefined;
+                    return jsValueService.JSValue_Undefined;
+                }
+                catch (Exception ex) 
+                {
+                    JavaScriptContext.SetException(CreateError(node, ex));
+                    return JavaScriptValue.Invalid;
+                }
             };
 
             return jsValueService.CreateFunction(f, IntPtr.Zero);
@@ -158,22 +183,30 @@ p2.Release();
             var jsValueService = node.GetService<IJSValueService>();
             JavaScriptNativeFunction f = (callee, isConstructCall, arguments, argumentCount, callbackData) =>
             {
-                if (argumentCount != 4)
+                try 
                 {
-                    throw new InvalidOperationException("call from javascript did not pass enough parameters");
-                }
-                T1 para1 = converter.FromJSValue<T1>(arguments[1]);
+                    if (argumentCount != 4)
+                    {
+                        throw new InvalidOperationException("call from javascript did not pass enough parameters");
+                    }
+                    T1 para1 = converter.FromJSValue<T1>(arguments[1]);
 T2 para2 = converter.FromJSValue<T2>(arguments[2]);
 T3 para3 = converter.FromJSValue<T3>(arguments[3]);
-                arguments[1].AddRef();
+                    arguments[1].AddRef();
 arguments[2].AddRef();
 arguments[3].AddRef();
 
-                a(para1,para2,para3);
-                arguments[1].Release();
+                    a(para1,para2,para3);
+                    arguments[1].Release();
 arguments[2].Release();
 arguments[3].Release();
-                return jsValueService.JSValue_Undefined;
+                    return jsValueService.JSValue_Undefined;
+                }
+                catch (Exception ex) 
+                {
+                    JavaScriptContext.SetException(CreateError(node, ex));
+                    return JavaScriptValue.Invalid;
+                }
             };
 
             return jsValueService.CreateFunction(f, IntPtr.Zero);
@@ -216,25 +249,33 @@ p3.Release();
             var jsValueService = node.GetService<IJSValueService>();
             JavaScriptNativeFunction f = (callee, isConstructCall, arguments, argumentCount, callbackData) =>
             {
-                if (argumentCount != 5)
+                try 
                 {
-                    throw new InvalidOperationException("call from javascript did not pass enough parameters");
-                }
-                T1 para1 = converter.FromJSValue<T1>(arguments[1]);
+                    if (argumentCount != 5)
+                    {
+                        throw new InvalidOperationException("call from javascript did not pass enough parameters");
+                    }
+                    T1 para1 = converter.FromJSValue<T1>(arguments[1]);
 T2 para2 = converter.FromJSValue<T2>(arguments[2]);
 T3 para3 = converter.FromJSValue<T3>(arguments[3]);
 T4 para4 = converter.FromJSValue<T4>(arguments[4]);
-                arguments[1].AddRef();
+                    arguments[1].AddRef();
 arguments[2].AddRef();
 arguments[3].AddRef();
 arguments[4].AddRef();
 
-                a(para1,para2,para3,para4);
-                arguments[1].Release();
+                    a(para1,para2,para3,para4);
+                    arguments[1].Release();
 arguments[2].Release();
 arguments[3].Release();
 arguments[4].Release();
-                return jsValueService.JSValue_Undefined;
+                    return jsValueService.JSValue_Undefined;
+                }
+                catch (Exception ex) 
+                {
+                    JavaScriptContext.SetException(CreateError(node, ex));
+                    return JavaScriptValue.Invalid;
+                }
             };
 
             return jsValueService.CreateFunction(f, IntPtr.Zero);
@@ -280,28 +321,36 @@ p4.Release();
             var jsValueService = node.GetService<IJSValueService>();
             JavaScriptNativeFunction f = (callee, isConstructCall, arguments, argumentCount, callbackData) =>
             {
-                if (argumentCount != 6)
+                try 
                 {
-                    throw new InvalidOperationException("call from javascript did not pass enough parameters");
-                }
-                T1 para1 = converter.FromJSValue<T1>(arguments[1]);
+                    if (argumentCount != 6)
+                    {
+                        throw new InvalidOperationException("call from javascript did not pass enough parameters");
+                    }
+                    T1 para1 = converter.FromJSValue<T1>(arguments[1]);
 T2 para2 = converter.FromJSValue<T2>(arguments[2]);
 T3 para3 = converter.FromJSValue<T3>(arguments[3]);
 T4 para4 = converter.FromJSValue<T4>(arguments[4]);
 T5 para5 = converter.FromJSValue<T5>(arguments[5]);
-                arguments[1].AddRef();
+                    arguments[1].AddRef();
 arguments[2].AddRef();
 arguments[3].AddRef();
 arguments[4].AddRef();
 arguments[5].AddRef();
 
-                a(para1,para2,para3,para4,para5);
-                arguments[1].Release();
+                    a(para1,para2,para3,para4,para5);
+                    arguments[1].Release();
 arguments[2].Release();
 arguments[3].Release();
 arguments[4].Release();
 arguments[5].Release();
-                return jsValueService.JSValue_Undefined;
+                    return jsValueService.JSValue_Undefined;
+                }
+                catch (Exception ex) 
+                {
+                    JavaScriptContext.SetException(CreateError(node, ex));
+                    return JavaScriptValue.Invalid;
+                }
             };
 
             return jsValueService.CreateFunction(f, IntPtr.Zero);
@@ -350,31 +399,39 @@ p5.Release();
             var jsValueService = node.GetService<IJSValueService>();
             JavaScriptNativeFunction f = (callee, isConstructCall, arguments, argumentCount, callbackData) =>
             {
-                if (argumentCount != 7)
+                try 
                 {
-                    throw new InvalidOperationException("call from javascript did not pass enough parameters");
-                }
-                T1 para1 = converter.FromJSValue<T1>(arguments[1]);
+                    if (argumentCount != 7)
+                    {
+                        throw new InvalidOperationException("call from javascript did not pass enough parameters");
+                    }
+                    T1 para1 = converter.FromJSValue<T1>(arguments[1]);
 T2 para2 = converter.FromJSValue<T2>(arguments[2]);
 T3 para3 = converter.FromJSValue<T3>(arguments[3]);
 T4 para4 = converter.FromJSValue<T4>(arguments[4]);
 T5 para5 = converter.FromJSValue<T5>(arguments[5]);
 T6 para6 = converter.FromJSValue<T6>(arguments[6]);
-                arguments[1].AddRef();
+                    arguments[1].AddRef();
 arguments[2].AddRef();
 arguments[3].AddRef();
 arguments[4].AddRef();
 arguments[5].AddRef();
 arguments[6].AddRef();
 
-                a(para1,para2,para3,para4,para5,para6);
-                arguments[1].Release();
+                    a(para1,para2,para3,para4,para5,para6);
+                    arguments[1].Release();
 arguments[2].Release();
 arguments[3].Release();
 arguments[4].Release();
 arguments[5].Release();
 arguments[6].Release();
-                return jsValueService.JSValue_Undefined;
+                    return jsValueService.JSValue_Undefined;
+                }
+                catch (Exception ex) 
+                {
+                    JavaScriptContext.SetException(CreateError(node, ex));
+                    return JavaScriptValue.Invalid;
+                }
             };
 
             return jsValueService.CreateFunction(f, IntPtr.Zero);
@@ -426,18 +483,20 @@ p6.Release();
             var jsValueService = node.GetService<IJSValueService>();
             JavaScriptNativeFunction f = (callee, isConstructCall, arguments, argumentCount, callbackData) =>
             {
-                if (argumentCount != 8)
+                try 
                 {
-                    throw new InvalidOperationException("call from javascript did not pass enough parameters");
-                }
-                T1 para1 = converter.FromJSValue<T1>(arguments[1]);
+                    if (argumentCount != 8)
+                    {
+                        throw new InvalidOperationException("call from javascript did not pass enough parameters");
+                    }
+                    T1 para1 = converter.FromJSValue<T1>(arguments[1]);
 T2 para2 = converter.FromJSValue<T2>(arguments[2]);
 T3 para3 = converter.FromJSValue<T3>(arguments[3]);
 T4 para4 = converter.FromJSValue<T4>(arguments[4]);
 T5 para5 = converter.FromJSValue<T5>(arguments[5]);
 T6 para6 = converter.FromJSValue<T6>(arguments[6]);
 T7 para7 = converter.FromJSValue<T7>(arguments[7]);
-                arguments[1].AddRef();
+                    arguments[1].AddRef();
 arguments[2].AddRef();
 arguments[3].AddRef();
 arguments[4].AddRef();
@@ -445,15 +504,21 @@ arguments[5].AddRef();
 arguments[6].AddRef();
 arguments[7].AddRef();
 
-                a(para1,para2,para3,para4,para5,para6,para7);
-                arguments[1].Release();
+                    a(para1,para2,para3,para4,para5,para6,para7);
+                    arguments[1].Release();
 arguments[2].Release();
 arguments[3].Release();
 arguments[4].Release();
 arguments[5].Release();
 arguments[6].Release();
 arguments[7].Release();
-                return jsValueService.JSValue_Undefined;
+                    return jsValueService.JSValue_Undefined;
+                }
+                catch (Exception ex) 
+                {
+                    JavaScriptContext.SetException(CreateError(node, ex));
+                    return JavaScriptValue.Invalid;
+                }
             };
 
             return jsValueService.CreateFunction(f, IntPtr.Zero);

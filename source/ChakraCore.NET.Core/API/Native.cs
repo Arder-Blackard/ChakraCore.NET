@@ -150,6 +150,12 @@
                             if (!ignoreScriptError)
                             {
                                 string msg = extractErrorObject(out var errorObject);
+
+                                Exception exception = extractException(errorObject);
+                                if ( exception != null )
+                                {
+                                    throw exception;
+                                }
                                 throw new JavaScriptScriptException(error, errorObject, $"Script threw an exception. {msg}");
                             }
                             break;
@@ -186,6 +192,57 @@
 
             }
 
+        }
+
+        private static Exception extractException( JavaScriptValue errorValue )
+        {
+            JavaScriptPropertyId exceptionPropertyId;
+            JavaScriptErrorCode result = JsGetPropertyIdFromName("exception", out exceptionPropertyId);
+            if (result != JavaScriptErrorCode.NoError)
+            {
+                throw new JavaScriptFatalException(result, "failed to get error exception id");
+            }
+
+            bool hasExceptionProperty;
+            result = JsHasProperty( errorValue, exceptionPropertyId, out hasExceptionProperty );
+            if (result != JavaScriptErrorCode.NoError)
+            {
+                throw new JavaScriptFatalException(result, "failed to check error exception existence");
+            }
+
+            if ( !hasExceptionProperty )
+            {
+                return null;
+            }
+
+            JavaScriptValue exceptionValue;
+            result = JsGetProperty(errorValue, exceptionPropertyId, out exceptionValue);
+            if (result != JavaScriptErrorCode.NoError)
+            {
+                throw new JavaScriptFatalException(result, "failed to get error exception object");
+            }
+
+            bool hasExternalData;
+            result = JsHasExternalData(exceptionValue, out hasExternalData );
+            if (result != JavaScriptErrorCode.NoError)
+            {
+                throw new JavaScriptFatalException(result, "failed to check error exception external data existence");
+            }
+
+            if ( !hasExternalData )
+            {
+                return null;
+            }
+
+            IntPtr exceptionValueExternalData;
+            result = JsGetExternalData(exceptionValue, out exceptionValueExternalData );
+            if (result != JavaScriptErrorCode.NoError)
+            {
+                throw new JavaScriptFatalException(result, "failed to get error exception external data");
+            }
+
+            GCHandle handle = GCHandle.FromIntPtr(exceptionValueExternalData);
+            return handle.Target as Exception;
         }
 
         private static string extractErrorObject(out JavaScriptValue errorObject)
